@@ -119,8 +119,6 @@ options: {
 }
 ```
 
-## License
-Copyright (c) 2012 Ivan Votti, contributors
 Licensed under the MIT license.
 <https://github.com/ivanvotti/grunt-jade-plugin/blob/master/LICENSE-MIT>
 
