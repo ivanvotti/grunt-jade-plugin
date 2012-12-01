@@ -1,29 +1,35 @@
-# grunt-jade-plugin [![Build Status](https://secure.travis-ci.org/ivanvotti/grunt-jade-plugin.png?branch=master)](http://travis-ci.org/ivanvotti/grunt-jade-plugin)
+# grunt-jade-plugin [!['Build status'][travis_image_url]][travis_page_url]
+
+[travis_image_url]: https://secure.travis-ci.org/ivanvotti/grunt-jade-plugin.png?branch=master
+[travis_page_url]: https://travis-ci.org/ivanvotti/grunt-jade-plugin
 
 > Precompile Jade templates to JavaScript file (normal or AMD).
 
-## Getting Started
+## Installation
 
-Install this grunt plugin next to your project's [grunt.js gruntfile][] with: `npm install grunt-jade-plugin`
+In your project's [gruntfile][getting_started] directory, run:
 
-Then add this line to your project's `grunt.js` gruntfile:
+```bash
+npm install grunt-jade-plugin
+```
+
+Then add this line to your project's [gruntfile][getting_started]:
 
 ```javascript
 grunt.loadNpmTasks('grunt-jade-plugin');
 ```
 
-### Config Examples
+## Config Examples
 
 Normal JS file compilation.
 ``` javascript
 jade: {
-  normal: {
+  compile: {
     options: {
       namespace: 'MyApp.Templates'
     },
     files: {
-      'path/to/result.js': 'temlates/**/*.jade',
-      'path/to/result2.js': ['temlates/main.jade', 'templates/other/*.jade']
+      'path/to/result.js': 'temlates/*.jade'
     }
   }
 }
@@ -35,18 +41,41 @@ jade: {
   amd: {
     options: {
       amd: true,
-      processName: function(filename){
-        return filename.replace('temlates/', '').replace('.jade', '');
-      }
+      runtimeName: 'jade',
     },
     files: {
-      'templates.js': 'temlates/**/*.jade'
+      'templates.js': 'temlates/*.jade'
     }
   }
 }
 ```
 
-### Defaults
+## Documentation
+
+Inside your `grunt.js` file, add a section named `jade`. This section specifies the files to compile and the options used with [Jade][].
+
+#### Files ```object```
+
+This defines what files this task will process and should contain key:value pairs.
+
+The key (destination) should be an unique filepath (supports [grunt.template][]) and the value (source) should be a filepath or an array of filepaths (supports [minimatch][]).
+
+Note: Values are precompiled to the namespaced array in the order passed.
+
+Examples:
+```javascript
+files: {
+  'result.js': 'source/*.jade', // includes files from source dir only
+  'result.js': 'source/**/*.jade', // includes files from source dir and all its subdirs
+  'result.js': ['path/to/sources/file.jade', 'path/to/more/other.jade']
+}
+```
+
+#### Options ```object```
+
+This controls how this task operates and should contain key:value pairs, see options below.
+
+Defaults:
 
 ```javascript
 options: {
@@ -57,24 +86,6 @@ options: {
   processName: function(filename) { return filename; }
 }
 ```
-
-## Documentation
-
-Inside your `grunt.js` file, add a section named `jade`. This section specifies the files to compile and the options used with [Jade][].
-
-##### files ```object```
-
-This defines what files this task will process and should contain key:value pairs.
-
-The key (destination) should be an unique filepath (supports [grunt.template][]) and the value (source) should be a filepath or an array of filepaths (supports [minimatch][]).
-
-Note: Values are precompiled to the namespaced array in the order passed.
-
-##### options ```object```
-
-This controls how this task operates and should contain key:value pairs, see options below.
-
-#### Options
 
 ##### namespace ```string```
 
@@ -89,18 +100,17 @@ options: {
 
 Result:
 ``` javascript
-this["MyApp"] = this["MyApp"] || {};
-this["MyApp"]["Templates"] = this["MyApp"]["Templates"] || {};
+this['MyApp'] = this['MyApp'] || {};
+this['MyApp']['Templates'] = this['MyApp']['Templates'] || {};
 
 // Template function
-this["MyApp"]["Templates"]["templates/file1.jade"] = function() {...};
+this['MyApp']['Templates']['templates/file1.jade'] = function() {};
 ```
 
 ##### amd ```boolean```
 
 Determine if preprocessed template functions will be wrapped in [Require.js][] define function (default is `false`).
 
-Example:
 ``` javascript
 define(['jade'], function(jade) {
   // ...
@@ -119,12 +129,18 @@ options: {
 }
 ```
 
+## Release History
+Check the [HISTORY.md][] file for more information.
+
+## License
+Copyright (c) 2012 Ivan Votti
 Licensed under the MIT license.
 <https://github.com/ivanvotti/grunt-jade-plugin/blob/master/LICENSE-MIT>
 
+[history.md]: https://github.com/ivanvotti/grunt-jade-plugin/blob/master/HISTORY.md
 [grunt]: https://github.com/gruntjs/grunt
-[grunt.js gruntfile]: https://github.com/gruntjs/grunt/blob/master/docs/getting_started.md
+[getting_started]: https://github.com/gruntjs/grunt/blob/master/docs/getting_started.md
 [grunt.template]: https://github.com/gruntjs/grunt/blob/master/docs/api_template.md
 [minimatch]: https://github.com/isaacs/minimatch
-[Require.js]: http://requirejs.org
+[require.js]: http://requirejs.org
 [jade]: http://jade-lang.com
