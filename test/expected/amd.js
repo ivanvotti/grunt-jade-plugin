@@ -1,4 +1,4 @@
-define(['runtime'], function(jade) {
+define(["jade", "underscore"], function(jade, _) {
 this["Templates"] = this["Templates"] || {};
 
 this["Templates"]["index"] = function anonymous(locals, attrs, escape, rethrow, merge) {

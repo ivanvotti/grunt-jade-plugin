@@ -3,7 +3,7 @@
 [travis_image_url]: https://secure.travis-ci.org/ivanvotti/grunt-jade-plugin.png?branch=master
 [travis_page_url]: https://travis-ci.org/ivanvotti/grunt-jade-plugin
 
-> Precompile Jade templates to JavaScript file (normal or AMD).
+Compile Jade templates to one JavaScript file (normal or AMD).
 
 ## Installation
 
@@ -21,7 +21,44 @@ grunt.loadNpmTasks('grunt-jade-plugin');
 
 ## Config Examples
 
-Normal JS file compilation.
+### AMD compilation
+
+``` javascript
+jade: {
+  compile: {
+    options: {
+      amd: true,
+
+      amdDependences: {
+        'jade': 'jade',
+        'underscore': '_'
+      },
+    },
+
+    files: {
+      'templates.js': 'temlates/*.jade'
+    }
+  }
+}
+```
+
+The result templates.js file will content:
+``` javascript
+define(["jade", "underscore"], function(jade, _) {
+  // Compiled templates will be here.
+}
+```
+
+You can use your compiled templates like this:
+``` javascript
+define(["templates"], function(templates) {
+  var data = {name: 'John', age: 28};
+  var htmlResult = templates['templates/user.jade'](data);
+}
+```
+
+### Normal JS file compilation
+
 ``` javascript
 jade: {
   compile: {
@@ -29,25 +66,25 @@ jade: {
       namespace: 'MyApp.Templates'
     },
     files: {
-      'path/to/result.js': 'temlates/*.jade'
+      'templates.js': 'temlates/*.jade'
     }
   }
 }
 ```
 
-For AMD compilation add `amd: true` option.
+The result templates.js file will content:
 ``` javascript
-jade: {
-  amd: {
-    options: {
-      amd: true,
-      runtimeName: 'jade',
-    },
-    files: {
-      'templates.js': 'temlates/*.jade'
-    }
-  }
-}
+this['MyApp'] = this['MyApp'] || {};
+this['MyApp']['Templates'] = this['MyApp']['Templates'] || {};
+
+// Template function
+this['MyApp']['Templates']['templates/user.jade'] = function() {};
+```
+
+You can use your compiled templates like this:
+``` javascript
+var data = {name: 'John', age: 28};
+var htmlResult = MyApp.Templates['templates/user.jade'](data);
 ```
 
 ## Documentation
@@ -80,10 +117,36 @@ Defaults:
 ```javascript
 options: {
   amd: false,
-  runtimeName: 'jade',
+  amdDependences: null,
   compileDebug: false,
   namespace: 'Templates',
   processName: function(filename) { return filename; }
+}
+```
+
+##### amd ```boolean```
+
+Determine if preprocessed template functions will be wrapped in [Require.js][] define function (default is `false`).
+
+``` javascript
+define(['jade'], function(jade) {
+  // ...
+});
+```
+
+##### amdDependences ```object```
+
+``` javascript
+amdDependences: {
+  'jade': 'jade',
+  'underscore': '_'
+},
+```
+
+Result:
+``` javascript
+define(["jade", "underscore"], function(jade, _) {
+  // Compiled templates will be here.
 }
 ```
 
@@ -104,17 +167,7 @@ this['MyApp'] = this['MyApp'] || {};
 this['MyApp']['Templates'] = this['MyApp']['Templates'] || {};
 
 // Template function
-this['MyApp']['Templates']['templates/file1.jade'] = function() {};
-```
-
-##### amd ```boolean```
-
-Determine if preprocessed template functions will be wrapped in [Require.js][] define function (default is `false`).
-
-``` javascript
-define(['jade'], function(jade) {
-  // ...
-});
+this['MyApp']['Templates']['templates/user.jade'] = function() {};
 ```
 
 ##### processName ```function```
@@ -123,14 +176,19 @@ This option accepts a function which takes one argument (the template filepath) 
 
 ``` javascript
 options: {
+
+  // Improving access to templates.
+  // Before: Templates['app/templates/layout.jade']
+  // After: Templates['layout'] or Templates.layout
+
   processName: function(filename) {
-    return filename.toUpperCase();
+    return filename.split('/').pop().split('.')[0]
   }
 }
 ```
 
 ## Release History
-Check the [HISTORY.md][] file for more information.
+Check the [HISTORY.md][] file for change logs and release notes.
 
 ## License
 Copyright (c) 2012 Ivan Votti

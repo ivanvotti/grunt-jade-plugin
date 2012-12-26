@@ -29,7 +29,7 @@ module.exports = function(grunt) {
     },
 
     jade: {
-      basic: {
+      normalTest: {
         files: {
           'tmp/basic.js': ['test/fixtures/basic/file1.jade', 'test/fixtures/basic/file2.jade']
         },
@@ -39,14 +39,19 @@ module.exports = function(grunt) {
         }
       },
 
-      amd: {
+      amdTest: {
         files: {
           'tmp/amd.js': ['test/fixtures/full/index.jade', 'test/fixtures/full/user/account.jade']
         },
 
         options: {
           amd: true,
-          runtimeName: 'runtime',
+
+          amdDependences: {
+            'jade': 'jade',
+            'underscore': '_'
+          },
+
           processName: function(filename) { return filename.replace('test/fixtures/full/', '').replace('.jade', ''); }
         }
       }

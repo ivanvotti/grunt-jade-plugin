@@ -1,13 +1,18 @@
+/*global require:true*/
+
 module.exports = function(grunt) {
   'use strict';
 
-  grunt.registerMultiTask('jade', 'Compile Jade templates to JavaScript file.', function() {
-    var jade = require('jade');
-    var helpers = require('grunt-lib-contrib').init(grunt);
+  grunt.registerMultiTask('jade',
+    'Compile Jade templates to one JavaScript file (normal or AMD).', function() {
+
+    var jade = require('jade'),
+        _ = grunt.utils._,
+        helpers = require('grunt-lib-contrib').init(grunt);
 
     var defaults = {
       amd: false,
-      runtimeName: 'jade',
+      amdDependences: null,
       compileDebug: false,
       namespace: 'Templates',
       processName: function(filename) { return filename; }
@@ -48,7 +53,20 @@ module.exports = function(grunt) {
 
         resultContent = output.join('\n\n');
         if (options.amd) {
-          resultContent = "define(['"+options.runtimeName+"'], function(jade) {\n"+resultContent+"\nreturn "+nsInfo.namespace+";\n});";
+          var modulePaths = [],
+              moduleNames = [];
+
+          if (options.amdDependences) {
+            _.each(options.amdDependences, function (moduleName, modulePath) {
+              modulePaths.push('"'+modulePath+'"');
+              moduleNames.push(moduleName);
+            });
+          }
+
+          modulePaths = modulePaths.join(', ');
+          moduleNames = moduleNames.join(', ');
+
+          resultContent = 'define(['+modulePaths+'], function('+moduleNames+') {\n'+resultContent+'\nreturn '+nsInfo.namespace+';\n});';
         }
 
         grunt.file.write(files.dest, resultContent);

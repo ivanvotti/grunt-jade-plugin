@@ -1,7 +1,7 @@
 {
   "name": "grunt-jade-plugin",
   "version": "0.1.0",
-  "description": "Grunt plugin to precompile Jade templates to JavaScript file (normal or AMD).",
+  "description": "Compile Jade templates to one JavaScript file (normal or AMD).",
   "keywords": [
     "gruntplugin"
   ],
