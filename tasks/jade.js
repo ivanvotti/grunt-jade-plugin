@@ -48,7 +48,7 @@ module.exports = function(grunt) {
 
         resultContent = output.join('\n\n');
         if (options.amd) {
-          resultContent = "define(['"+options.runtimeName+"'], function(jade) {\n"+resultContent+"\nreturn "+nsInfo.namespace+";\n});";
+          resultContent = typeof options.amd == "function" ? options.amd(resultContent, nsInfo, options) : "define(['"+options.runtimeName+"'], function(jade) {\n"+resultContent+"\nreturn "+nsInfo.namespace+";\n});";
         }
 
         grunt.file.write(files.dest, resultContent);
