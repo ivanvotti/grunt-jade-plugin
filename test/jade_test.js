@@ -21,13 +21,13 @@ exports.jade = {
 
     test.done();
   },
-  amd: function(test) {
+  amdFunction: function(test) {
     'use strict';
     test.expect(1);
 
     var actual = grunt.file.read('tmp/amd-function.js');
     var expected = grunt.file.read('test/expected/amd-function.js');
-    test.equal(actual, expected, 'should compile Jade templates into JavaScript file with AMD and custom function support');
+    test.equal(actual, expected, 'should compile Jade templates into JavaScript file with AMD and custom support');
 
     test.done();
   }
