@@ -49,6 +49,20 @@ module.exports = function(grunt) {
           runtimeName: 'runtime',
           processName: function(filename) { return filename.replace('test/fixtures/full/', '').replace('.jade', ''); }
         }
+      },
+
+      amdFunction: {
+        files: {
+          'tmp/amd-function.js': ['test/fixtures/full/index.jade', 'test/fixtures/full/user/account.jade']
+        },
+
+        options: {
+          amd: function(resultContent, nsInfo, options){
+            return "define(['"+options.runtimeName+"', 'underscore'], function(jade, _) {\n"+resultContent+"\nreturn "+nsInfo.namespace+";\n});";
+          },
+          runtimeName: 'runtime',
+          processName: function(filename) { return filename.replace('test/fixtures/full/', '').replace('.jade', ''); }
+        }
       }
     },
 
