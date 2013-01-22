@@ -6,14 +6,36 @@ module.exports = function(grunt) {
   grunt.registerMultiTask('jade',
     'Compile Jade templates to one JavaScript file (normal or AMD).', function() {
 
-    var jade = require('jade'),
-        path = require('path'),
-        _ = grunt.utils._,
-        helpers = require('grunt-lib-contrib').init(grunt);
+    var getNamespaceDeclaration = function(ns, isLocal) {
+      var output = [];
+      var curPath = isLocal ? 'exports' : 'this';
+      var nsParts = ns.split('.');
+
+      nsParts.forEach(function(curPart, index) {
+        curPath += '[' + JSON.stringify(curPart) + ']';
+        output.push(curPath + ' = ' + curPath + ' || {};');
+      });
+
+      if (isLocal) {
+        output.unshift('var exports = exports || {};');
+      }
+
+      return {
+        namespace: curPath,
+        declaration: output.join('\n')
+      };
+    };
+
+    var path = require('path'),
+        jade = require('jade'),
+        jadeRuntimePath = require.resolve('jade/lib/runtime'),
+        helpers = require('grunt-lib-contrib').init(grunt),
+        _ = grunt.utils._;
 
     var defaults = {
       amd: false,
       amdDependences: null,
+      includeRuntime: true,
       compileDebug: false,
       namespace: 'Templates',
       processName: function(filename) { return filename.split('/').pop().split('.')[0]; }
@@ -26,7 +48,7 @@ module.exports = function(grunt) {
 
     var compiled, srcFiles, fileContents, templateName, resultContent;
     var output = [];
-    var nsInfo = helpers.getNamespaceDeclaration(options.namespace);
+    var nsInfo = getNamespaceDeclaration(options.namespace, options.amd);
     var compilationOptions = {
       client: true,
       compileDebug: options.compileDebug
@@ -59,6 +81,13 @@ module.exports = function(grunt) {
         output.unshift(nsInfo.declaration);
 
         resultContent = output.join('\n\n');
+
+        if (options.includeRuntime) {
+          var runtimeContent = grunt.file.read(jadeRuntimePath);
+          runtimeContent = 'var jade = {};\n' + runtimeContent.replace(/exports/g, 'jade');
+          resultContent = runtimeContent + '\n' + resultContent;
+        }
+
         if (options.amd) {
           var modulePaths = [],
               moduleNames = [];

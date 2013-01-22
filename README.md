@@ -119,6 +119,7 @@ Defaults:
 options: {
   amd: false,
   amdDependences: null,
+  includeRuntime: true,
   compileDebug: false,
   namespace: 'Templates',
   processName: function(filename) { return filename.split('/').pop().split('.')[0]; }
@@ -161,6 +162,12 @@ Templates['templates/user.jade']
 Templates['templates/account.jade']
 
 ```
+
+##### includeRuntime ```boolean```
+
+Determine if Jade's [runtime.js](https://github.com/visionmedia/jade/blob/master/runtime.js) file will be included into the result JS file. By default it will be included.
+
+Note that you have to use the runtime file anyway. So if you prefer to keep it separately, you can download it from the [official repository](runtime.js).
 
 ##### amd ```boolean```
 

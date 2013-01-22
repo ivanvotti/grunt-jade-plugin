@@ -35,7 +35,8 @@ module.exports = function(grunt) {
         },
 
         options: {
-          namespace: 'MyApp.Templates'
+          namespace: 'MyApp.Templates',
+          includeRuntime: false
         }
       },
 
@@ -48,8 +49,8 @@ module.exports = function(grunt) {
           amd: true,
 
           amdDependences: {
-            'jade': 'jade',
-            'underscore': '_'
+            'underscore': '_',
+            'helpers/helper': 'helper'
           },
 
           processName: function(filename) {
