@@ -34,8 +34,9 @@ module.exports = function(grunt) {
 
     var defaults = {
       amd: false,
-      amdDependences: null,
+      amdDependences: {},
       includeRuntime: true,
+      injectBefore: '',
       compileDebug: false,
       namespace: 'Templates',
       processName: function(filename) { return filename.split('/').pop().split('.')[0]; }
@@ -80,29 +81,33 @@ module.exports = function(grunt) {
       if (output.length > 0) {
         output.unshift(nsInfo.declaration);
 
-        resultContent = output.join('\n\n');
-
         if (options.includeRuntime) {
           var runtimeContent = grunt.file.read(jadeRuntimePath);
           runtimeContent = 'var jade = {};\n' + runtimeContent.replace(/exports/g, 'jade');
-          resultContent = runtimeContent + '\n' + resultContent;
+          output.unshift(runtimeContent);
         }
+
+        if (options.injectBefore) {
+          output.unshift(options.injectBefore);
+        }
+
+        resultContent = output.join('\n\n');
 
         if (options.amd) {
           var modulePaths = [],
               moduleNames = [];
 
-          if (options.amdDependences) {
-            _.each(options.amdDependences, function (moduleName, modulePath) {
-              modulePaths.push('"'+modulePath+'"');
-              moduleNames.push(moduleName);
-            });
-          }
+          _.each(options.amdDependences, function (moduleName, modulePath) {
+            modulePaths.push('"'+modulePath+'"');
+            moduleNames.push(moduleName);
+          });
 
           modulePaths = modulePaths.join(', ');
           moduleNames = moduleNames.join(', ');
 
           resultContent = 'define(['+modulePaths+'], function('+moduleNames+') {\n'+resultContent+'\nreturn '+nsInfo.namespace+';\n});';
+        } else {
+          resultContent = '(function(){\n'+resultContent+'\n}).call(this);';
         }
 
         grunt.file.write(files.dest, resultContent);

@@ -47,6 +47,7 @@ module.exports = function(grunt) {
 
         options: {
           amd: true,
+          injectBefore: '// Test injection',
 
           amdDependences: {
             'underscore': '_',

@@ -1,4 +1,6 @@
 define(["underscore", "helpers/helper"], function(_, helper) {
+// Test injection
+
 var jade = {};
 
 /*!
@@ -174,6 +176,7 @@ jade.rethrow = function rethrow(err, filename, lineno){
     + '\n' + context + '\n\n' + err.message;
   throw err;
 };
+
 
 var exports = exports || {};
 exports["Templates"] = exports["Templates"] || {};

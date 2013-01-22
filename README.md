@@ -118,10 +118,11 @@ Defaults:
 ```javascript
 options: {
   amd: false,
-  amdDependences: null,
+  amdDependences: {},
   includeRuntime: true,
-  compileDebug: false,
+  injectBefore: '',
   namespace: 'Templates',
+  compileDebug: false,
   processName: function(filename) { return filename.split('/').pop().split('.')[0]; }
 }
 ```
@@ -139,7 +140,7 @@ Templates['templates/user.jade']
 // After:
 Templates['user']
 
-// Or even
+// So you can access your template function like this:
 Templates.user
 ```
 
@@ -213,6 +214,16 @@ this['MyApp']['Templates'] = this['MyApp']['Templates'] || {};
 
 // Template function
 this['MyApp']['Templates']['user'] = function() {};
+```
+
+##### injectBefore ```string```
+
+It should contain a string that will be injected before precompiled templates.
+
+``` javascript
+options: {
+  injectBefore: '// string to enject'
+}
 ```
 
 ## Release History

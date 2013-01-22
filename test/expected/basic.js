@@ -1,3 +1,4 @@
+(function(){
 this["MyApp"] = this["MyApp"] || {};
 this["MyApp"]["Templates"] = this["MyApp"]["Templates"] || {};
 
@@ -20,3 +21,4 @@ buf.push('<p>Basic file 2</p>');
 }
 return buf.join("");
 };
+}).call(this);
