@@ -7,6 +7,7 @@ module.exports = function(grunt) {
     'Compile Jade templates to one JavaScript file (normal or AMD).', function() {
 
     var jade = require('jade'),
+        path = require('path'),
         _ = grunt.utils._,
         helpers = require('grunt-lib-contrib').init(grunt);
 
@@ -15,7 +16,7 @@ module.exports = function(grunt) {
       amdDependences: null,
       compileDebug: false,
       namespace: 'Templates',
-      processName: function(filename) { return filename; }
+      processName: function(filename) { return filename.split('/').pop().split('.')[0]; }
     };
     var options = helpers.options(this, defaults);
     grunt.verbose.writeflags(options, 'Options');
@@ -34,6 +35,12 @@ module.exports = function(grunt) {
     this.files.forEach(function(files) {
       srcFiles = grunt.file.expand(files.src);
       srcFiles.forEach(function(filepath) {
+
+        // Ignore if file name starts with underscore: _file.jade
+        if (path.basename(filepath).indexOf('_') === 0) {
+          return;
+        }
+
         fileContents = grunt.file.read(filepath);
 
         try {

@@ -41,7 +41,7 @@ module.exports = function(grunt) {
 
       amdTest: {
         files: {
-          'tmp/amd.js': ['test/fixtures/full/index.jade', 'test/fixtures/full/user/account.jade']
+          'tmp/amd.js': 'test/fixtures/full/**/*.jade'
         },
 
         options: {
@@ -52,7 +52,9 @@ module.exports = function(grunt) {
             'underscore': '_'
           },
 
-          processName: function(filename) { return filename.replace('test/fixtures/full/', '').replace('.jade', ''); }
+          processName: function(filename) {
+            return filename.replace('test/fixtures/full/', '').split('.')[0];
+          }
         }
       }
     },

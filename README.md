@@ -36,7 +36,7 @@ jade: {
     },
 
     files: {
-      'templates.js': 'temlates/*.jade'
+      'templates.js': ['temlates/user.jade', 'templates/account.jade']
     }
   }
 }
@@ -53,7 +53,8 @@ You can use your compiled templates like this:
 ``` javascript
 define(["templates"], function(templates) {
   var data = {name: 'John', age: 28};
-  var htmlResult = templates['templates/user.jade'](data);
+  var htmlResult = templates.user(data);
+  var htmlResult = templates.account(data);
 }
 ```
 
@@ -78,13 +79,13 @@ this['MyApp'] = this['MyApp'] || {};
 this['MyApp']['Templates'] = this['MyApp']['Templates'] || {};
 
 // Template function
-this['MyApp']['Templates']['templates/user.jade'] = function() {};
+this['MyApp']['Templates']['user'] = function() {};
 ```
 
 You can use your compiled templates like this:
 ``` javascript
 var data = {name: 'John', age: 28};
-var htmlResult = MyApp.Templates['templates/user.jade'](data);
+var htmlResult = MyApp.Templates.user(data);
 ```
 
 ## Documentation
@@ -102,9 +103,9 @@ Note: Values are precompiled to the namespaced array in the order passed.
 Examples:
 ```javascript
 files: {
-  'result.js': 'source/*.jade', // includes files from source dir only
-  'result.js': 'source/**/*.jade', // includes files from source dir and all its subdirs
-  'result.js': ['path/to/sources/file.jade', 'path/to/more/other.jade']
+  'templates.js': 'source/*.jade', // includes files from source dir only
+  'templates.js': 'source/**/*.jade', // includes files from source dir and all its subdirs
+  'templates.js': ['path/to/sources/file.jade', 'path/to/more/other.jade']
 }
 ```
 
@@ -120,8 +121,45 @@ options: {
   amdDependences: null,
   compileDebug: false,
   namespace: 'Templates',
-  processName: function(filename) { return filename; }
+  processName: function(filename) { return filename.split('/').pop().split('.')[0]; }
 }
+```
+
+##### processName ```function```
+
+This option accepts a function which takes the template filepath and returns a string which will be used as the key for the precompiled template object.
+
+By default processName removes the template file path and an extension like this:
+
+``` javascript
+// Before:
+Templates['templates/user.jade']
+
+// After:
+Templates['user']
+
+// Or even
+Templates.user
+```
+
+You can change the default behaviour like this:
+``` javascript
+files: {
+  'templates.js': ['temlates/user.jade', 'templates/account.jade']
+},
+
+options: {
+  processName: function(filename) {
+    return filename
+  }
+}
+```
+
+Resutl:
+``` javascript
+Templates['templates/user.jade']
+Templates['templates/account.jade']
+
 ```
 
 ##### amd ```boolean```
@@ -167,24 +205,7 @@ this['MyApp'] = this['MyApp'] || {};
 this['MyApp']['Templates'] = this['MyApp']['Templates'] || {};
 
 // Template function
-this['MyApp']['Templates']['templates/user.jade'] = function() {};
-```
-
-##### processName ```function```
-
-This option accepts a function which takes one argument (the template filepath) and returns a string which will be used as the key for the precompiled template object.  The example below stores all templates on the default Templates namespace in capital letters.
-
-``` javascript
-options: {
-
-  // Improving access to templates.
-  // Before: Templates['app/templates/layout.jade']
-  // After: Templates['layout'] or Templates.layout
-
-  processName: function(filename) {
-    return filename.split('/').pop().split('.')[0]
-  }
-}
+this['MyApp']['Templates']['user'] = function() {};
 ```
 
 ## Release History
