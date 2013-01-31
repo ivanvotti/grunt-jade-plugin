@@ -59,11 +59,6 @@ module.exports = function(grunt) {
       srcFiles = grunt.file.expand(files.src);
       srcFiles.forEach(function(filepath) {
 
-        // Ignore if file name starts with underscore: _file.jade
-        if (path.basename(filepath).indexOf('_') === 0) {
-          return;
-        }
-
         fileContents = grunt.file.read(filepath);
 
         try {
