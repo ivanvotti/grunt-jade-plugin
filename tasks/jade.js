@@ -30,7 +30,8 @@ module.exports = function(grunt) {
         jade = require('jade'),
         jadeRuntimePath = require.resolve('jade/lib/runtime'),
         helpers = require('grunt-lib-contrib').init(grunt),
-        _ = grunt.utils._;
+        util = grunt.utils || grunt.util,
+        _ = util._;
 
     var defaults = {
       amd: false,
