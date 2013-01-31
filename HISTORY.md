@@ -1,3 +1,10 @@
+
+0.2.1 / 2013-01-31
+==================
+
+  * Improve grunt 0.4.x compatibility
+  * Unignore file names starting with "_"
+
 0.2.0 / 2013-01-22
 ==================
 
