@@ -92,7 +92,7 @@ var htmlResult = MyApp.Templates.user(data);
 
 #### Files ```object```
 
-Define what files this task will process. For more info about ```files object``` please read [Grant docs](http://gruntjs.com/configuring-tasks#files).
+Define what files this task will process. For more info about ```files object``` please read [Grunt docs](http://gruntjs.com/configuring-tasks#files).
 
 Examples:
 ```javascript
