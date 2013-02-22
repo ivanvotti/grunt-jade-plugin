@@ -5,12 +5,18 @@
 
 Compile Jade templates to one JavaScript file (normal or AMD).
 
-**Note:** This plugin requires [Grunt](http://gruntjs.com/) `~0.4.0`. If you're still using grunt v.0.3.x please use branch [0.3.x](https://github.com/ivanvotti/grunt-jade-plugin/tree/0.3.x).
+**Note:** This plugin requires [Grunt](http://gruntjs.com/) `~0.4.0`. If you're still using grunt v.0.3.x please use [0.3.x branch](https://github.com/ivanvotti/grunt-jade-plugin/tree/0.3.x) of this plugin.
 
 ## Installation
 
 ```shell
 npm install grunt-jade-plugin --save-dev
+```
+
+If you're still using [Grunt][] v.0.3.x:
+
+```shell
+npm install grunt-jade-plugin@~0.3.0 --save-dev
 ```
 
 Then it may be enabled inside your Gruntfile with this line of JavaScript:
