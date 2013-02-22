@@ -1,7 +1,5 @@
-define(["underscore", "helpers/helper"], function(_, helper) {
-// Test injection
-
-var jade = {};
+define(['underscore', 'helpers/helper'], function(_, helper) {
+  var jade = {};
 
 /*!
  * Jade - runtime
@@ -181,24 +179,14 @@ jade.rethrow = function rethrow(err, filename, lineno){
 var exports = exports || {};
 exports["Templates"] = exports["Templates"] || {};
 
-exports["Templates"]["index"] = function anonymous(locals, attrs, escape, rethrow, merge) {
+exports["Templates"]['basic'] = function anonymous(locals, attrs, escape, rethrow, merge) {
 attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
 var buf = [];
 with (locals || {}) {
 var interp;
-buf.push('<!DOCTYPE html><html><head><title>My title</title><script src="script.js"></script></head><body><div id="content"><h1>' + escape((interp = title) == null ? '' : interp) + '</h1></div></body></html>');
+buf.push('<p>Basic template</p>');
 }
 return buf.join("");
 };
-
-exports["Templates"]["user/account"] = function anonymous(locals, attrs, escape, rethrow, merge) {
-attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
-var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<!DOCTYPE html><html><head><title>My title</title></head><body><div id="content"><h1>' + escape((interp = username) == null ? '' : interp) + ' account</h1></div></body></html>');
-}
-return buf.join("");
-};
-return exports["Templates"];
+  return exports["Templates"];
 });

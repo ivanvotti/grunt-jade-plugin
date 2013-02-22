@@ -5,17 +5,17 @@
 
 Compile Jade templates to one JavaScript file (normal or AMD).
 
+**Note:** This plugin requires [Grunt](http://gruntjs.com/) `~0.4.0`. If you're still using grunt v.0.3.x please use branch [0.3.x](https://github.com/ivanvotti/grunt-jade-plugin/tree/0.3.x).
+
 ## Installation
 
-In your project's [gruntfile][getting_started] directory, run:
-
-```bash
-npm install grunt-jade-plugin
+```shell
+npm install grunt-jade-plugin --save-dev
 ```
 
-Then add this line to your project's [gruntfile][getting_started]:
+Then it may be enabled inside your Gruntfile with this line of JavaScript:
 
-```javascript
+```js
 grunt.loadNpmTasks('grunt-jade-plugin');
 ```
 
@@ -90,22 +90,16 @@ var htmlResult = MyApp.Templates.user(data);
 
 ## Documentation
 
-Inside your `grunt.js` file, add a section named `jade`. This section specifies the files to compile and the options used with [Jade][].
-
 #### Files ```object```
 
-This defines what files this task will process and should contain key:value pairs.
-
-The key (destination) should be an unique filepath (supports [grunt.template][]) and the value (source) should be a filepath or an array of filepaths (supports [minimatch][]).
-
-Note: Values are precompiled to the namespaced array in the order passed.
+Define what files this task will process. For more info about ```files object``` please read [Grant docs](http://gruntjs.com/configuring-tasks#files).
 
 Examples:
 ```javascript
 files: {
-  'templates.js': 'source/*.jade', // includes files from source dir only
-  'templates.js': 'source/**/*.jade', // includes files from source dir and all its subdirs
-  'templates.js': ['path/to/sources/file.jade', 'path/to/more/other.jade']
+  'templates1.js': 'source/*.jade', // includes files from source dir only
+  'templates2.js': 'source/**/*.jade', // includes files from source dir and all its subdirs
+  'templates3.js': ['path/to/sources/file.jade', 'path/to/more/other.jade']
 }
 ```
 
@@ -113,7 +107,7 @@ files: {
 
 This controls how this task operates and should contain key:value pairs, see options below.
 
-Defaults:
+All options and defaults:
 
 ```javascript
 options: {
@@ -175,7 +169,7 @@ Note that you have to use the runtime file anyway. So if you prefer to keep it s
 Determine if preprocessed template functions will be wrapped in [Require.js][] define function (default is `false`).
 
 ``` javascript
-define(['jade'], function(jade) {
+define([], function() {
   // ...
 });
 ```
@@ -184,14 +178,14 @@ define(['jade'], function(jade) {
 
 ``` javascript
 amdDependences: {
-  'jade': 'jade',
+  'helpers': 'helpers',
   'underscore': '_'
 },
 ```
 
 Result:
 ``` javascript
-define(["jade", "underscore"], function(jade, _) {
+define(["helpers", "underscore"], function(helpers, _) {
   // Compiled templates will be here.
 }
 ```

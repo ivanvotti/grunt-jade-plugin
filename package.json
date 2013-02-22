@@ -1,6 +1,6 @@
 {
   "name": "grunt-jade-plugin",
-  "version": "0.2.1",
+  "version": "0.4.0",
   "description": "Compile Jade templates to one JavaScript file (normal or AMD).",
   "keywords": [
     "gruntplugin"
@@ -23,7 +23,7 @@
       "url": "https://github.com/ivanvotti/grunt-jade-plugin/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "grunt.js",
+  "main": "Gruntfile.coffee",
   "scripts": {
     "test": "grunt test"
   },
@@ -32,10 +32,14 @@
   },
   "dependencies": {
     "jade": "~0.27.7",
-    "grunt-lib-contrib": "~0.3.0"
+    "coffee-script": "~1.4.0"
   },
   "devDependencies": {
-    "grunt": "~0.3.15",
-    "grunt-contrib-clean": "~0.3.0"
+    "grunt": "~0.4.0",
+    "grunt-contrib-clean": "~0.4.0",
+    "grunt-contrib-nodeunit": "~0.1.2"
+  },
+  "peerDependencies": {
+    "grunt": "~0.4.0"
   }
 }
