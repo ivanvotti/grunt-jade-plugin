@@ -30,7 +30,7 @@ grunt.loadNpmTasks('grunt-jade-plugin');
 ### AMD compilation
 
 ``` javascript
-jade: {
+jade2js: {
   compile: {
     options: {
       amd: true,
@@ -67,7 +67,7 @@ define(["templates"], function(templates) {
 ### Normal JS file compilation
 
 ``` javascript
-jade: {
+jade2js: {
   compile: {
     options: {
       namespace: 'MyApp.Templates'

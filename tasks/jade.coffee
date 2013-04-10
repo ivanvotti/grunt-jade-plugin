@@ -4,7 +4,7 @@ module.exports = (grunt) ->
   jade = require('jade')
   JADE_RUNTIME_PATH = require.resolve('jade/lib/runtime')
 
-  grunt.registerMultiTask 'jade', 'Compile Jade templates to one JavaScript file (normal or AMD).', ->
+  grunt.registerMultiTask 'jade2js', 'Compile Jade templates to one JavaScript file (normal or AMD).', ->
     options = @options
       amd: false
       amdDependences: {}

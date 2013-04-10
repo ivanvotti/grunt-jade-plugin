@@ -2,7 +2,7 @@ module.exports = (grunt) ->
   'use strict'
 
   grunt.initConfig
-    jade:
+    jade2js:
       basicTest:
         files:
           'tmp/basic.js': 'test/fixtures/basic.jade'
@@ -31,5 +31,5 @@ module.exports = (grunt) ->
   grunt.loadNpmTasks 'grunt-contrib-clean'
   grunt.loadNpmTasks('grunt-contrib-nodeunit')
 
-  grunt.registerTask 'test', ['clean', 'jade', 'nodeunit']
+  grunt.registerTask 'test', ['clean', 'jade2js', 'nodeunit']
   grunt.registerTask 'default', ['test']

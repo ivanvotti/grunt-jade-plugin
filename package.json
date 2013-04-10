@@ -1,6 +1,6 @@
 {
   "name": "grunt-jade-plugin",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Compile Jade templates to one JavaScript file (normal or AMD).",
   "keywords": [
     "gruntplugin"
@@ -31,8 +31,7 @@
     "node": ">= 0.8.0"
   },
   "dependencies": {
-    "jade": "~0.27.7",
-    "coffee-script": "~1.4.0"
+    "jade": "~0.27.7"
   },
   "devDependencies": {
     "grunt": "~0.4.0",
