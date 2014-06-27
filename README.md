@@ -123,6 +123,7 @@ options: {
   injectBefore: '',
   namespace: 'Templates',
   compileDebug: false,
+  filters: [],
   processName: function(filename) { return filename.split('/').pop().split('.')[0]; }
 }
 ```
@@ -162,6 +163,19 @@ Resutl:
 Templates['templates/user.jade']
 Templates['templates/account.jade']
 
+```
+
+##### filters ```Object```
+
+Gruntfile.js:
+
+``` javascript
+options: {
+  filters: {
+    some: function(block) {},
+    another: function(block) {}
+  }
+}
 ```
 
 ##### includeRuntime ```boolean```

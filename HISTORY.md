@@ -1,3 +1,7 @@
+### 0.6.0 / 2014-06-27
+
+  * Added filters to options
+
 ### 0.5.0 / 2013-04-10
 
   * Changed task name to jade2js

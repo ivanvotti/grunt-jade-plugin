@@ -13,6 +13,10 @@ module.exports = (grunt) ->
       compileDebug: false
       namespace: 'Templates'
       processName: (filename) -> filename.split('/').pop().split('.')[0]
+      filters: []
+
+    for filterName, filter of options.filters
+      jade.filters[filterName] = filter
 
     grunt.verbose.writeflags options, 'Options'
 
