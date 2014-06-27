@@ -1,7 +1,12 @@
 # grunt-jade-plugin [!['Build status'][travis_image_url]][travis_page_url]
 
+[![npm_image_url]][npm_page_url]
+
 [travis_image_url]: https://secure.travis-ci.org/ivanvotti/grunt-jade-plugin.png?branch=master
 [travis_page_url]: https://travis-ci.org/ivanvotti/grunt-jade-plugin
+
+[npm_image_url]: https://nodei.co/npm/grunt-jade-plugin.png?downloads=true
+[npm_page_url]: https://npmjs.org/package/grunt-jade-plugin/
 
 Compile Jade templates to one JavaScript file (normal or AMD).
 
@@ -245,7 +250,7 @@ Check the [HISTORY.md][] file for change logs and release notes.
 
 ## License
 Copyright (c) 2012 Ivan Votti
-Licensed under the MIT license.
+Licensed under the MIT license.  
 <https://github.com/ivanvotti/grunt-jade-plugin/blob/master/LICENSE-MIT>
 
 [history.md]: https://github.com/ivanvotti/grunt-jade-plugin/blob/master/HISTORY.md
