@@ -23,7 +23,6 @@ module.exports = (grunt) ->
     output = []
     nsInfo = getNamespaceDeclaration(options.namespace, options.amd)
     compilationOptions =
-      client: true
       compileDebug: options.compileDebug
 
     # Prepare Jade runtime.
@@ -36,7 +35,7 @@ module.exports = (grunt) ->
 
         try
           compilationOptions.filename = filepath
-          compiled = jade.compile(fileContents, compilationOptions)
+          compiled = jade.compileClient(fileContents, compilationOptions)
         catch errorMessage
           grunt.log.error errorMessage
           grunt.fail.warn "Jade failed to compile #{filepath}."
