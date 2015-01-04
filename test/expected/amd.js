@@ -1,37 +1,6 @@
 define(['underscore', 'helpers/helper'], function(_, helper) {
   var jade = {};
-
-/*!
- * Jade - runtime
- * Copyright(c) 2010 TJ Holowaychuk <tj@vision-media.ca>
- * MIT Licensed
- */
-
-/**
- * Lame Array.isArray() polyfill for now.
- */
-
-if (!Array.isArray) {
-  Array.isArray = function(arr){
-    return '[object Array]' == Object.prototype.toString.call(arr);
-  };
-}
-
-/**
- * Lame Object.keys() polyfill for now.
- */
-
-if (!Object.keys) {
-  Object.keys = function(obj){
-    var arr = [];
-    for (var key in obj) {
-      if (obj.hasOwnProperty(key)) {
-        arr.push(key);
-      }
-    }
-    return arr;
-  }
-}
+'use strict';
 
 /**
  * Merge two attribute objects giving precedence
@@ -46,6 +15,13 @@ if (!Object.keys) {
  */
 
 jade.merge = function merge(a, b) {
+  if (arguments.length === 1) {
+    var attrs = a[0];
+    for (var i = 1; i < a.length; i++) {
+      attrs = merge(attrs, a[i]);
+    }
+    return attrs;
+  }
   var ac = a['class'];
   var bc = b['class'];
 
@@ -54,9 +30,7 @@ jade.merge = function merge(a, b) {
     bc = bc || [];
     if (!Array.isArray(ac)) ac = [ac];
     if (!Array.isArray(bc)) bc = [bc];
-    ac = ac.filter(nulls);
-    bc = bc.filter(nulls);
-    a['class'] = ac.concat(bc).join(' ');
+    a['class'] = ac.concat(bc).filter(nulls);
   }
 
   for (var key in b) {
@@ -71,14 +45,103 @@ jade.merge = function merge(a, b) {
 /**
  * Filter null `val`s.
  *
- * @param {Mixed} val
- * @return {Mixed}
+ * @param {*} val
+ * @return {Boolean}
  * @api private
  */
 
 function nulls(val) {
-  return val != null;
+  return val != null && val !== '';
 }
+
+/**
+ * join array as classes.
+ *
+ * @param {*} val
+ * @return {String}
+ */
+jade.joinClasses = joinClasses;
+function joinClasses(val) {
+  return (Array.isArray(val) ? val.map(joinClasses) :
+    (val && typeof val === 'object') ? Object.keys(val).filter(function (key) { return val[key]; }) :
+    [val]).filter(nulls).join(' ');
+}
+
+/**
+ * Render the given classes.
+ *
+ * @param {Array} classes
+ * @param {Array.<Boolean>} escaped
+ * @return {String}
+ */
+jade.cls = function cls(classes, escaped) {
+  var buf = [];
+  for (var i = 0; i < classes.length; i++) {
+    if (escaped && escaped[i]) {
+      buf.push(jade.escape(joinClasses([classes[i]])));
+    } else {
+      buf.push(joinClasses(classes[i]));
+    }
+  }
+  var text = joinClasses(buf);
+  if (text.length) {
+    return ' class="' + text + '"';
+  } else {
+    return '';
+  }
+};
+
+
+jade.style = function (val) {
+  if (val && typeof val === 'object') {
+    return Object.keys(val).map(function (style) {
+      return style + ':' + val[style];
+    }).join(';');
+  } else {
+    return val;
+  }
+};
+/**
+ * Render the given attribute.
+ *
+ * @param {String} key
+ * @param {String} val
+ * @param {Boolean} escaped
+ * @param {Boolean} terse
+ * @return {String}
+ */
+jade.attr = function attr(key, val, escaped, terse) {
+  if (key === 'style') {
+    val = jade.style(val);
+  }
+  if ('boolean' == typeof val || null == val) {
+    if (val) {
+      return ' ' + (terse ? key : key + '="' + key + '"');
+    } else {
+      return '';
+    }
+  } else if (0 == key.indexOf('data') && 'string' != typeof val) {
+    if (JSON.stringify(val).indexOf('&') !== -1) {
+      console.warn('Since Jade 2.0.0, ampersands (`&`) in data attributes ' +
+                   'will be escaped to `&amp;`');
+    };
+    if (val && typeof val.toISOString === 'function') {
+      console.warn('Jade will eliminate the double quotes around dates in ' +
+                   'ISO form after 2.0.0');
+    }
+    return ' ' + key + "='" + JSON.stringify(val).replace(/'/g, '&apos;') + "'";
+  } else if (escaped) {
+    if (val && typeof val.toISOString === 'function') {
+      console.warn('Jade will stringify dates in ISO form after 2.0.0');
+    }
+    return ' ' + key + '="' + jade.escape(val) + '"';
+  } else {
+    if (val && typeof val.toISOString === 'function') {
+      console.warn('Jade will stringify dates in ISO form after 2.0.0');
+    }
+    return ' ' + key + '="' + val + '"';
+  }
+};
 
 /**
  * Render the given attributes object.
@@ -86,42 +149,28 @@ function nulls(val) {
  * @param {Object} obj
  * @param {Object} escaped
  * @return {String}
- * @api private
  */
+jade.attrs = function attrs(obj, terse){
+  var buf = [];
 
-jade.attrs = function attrs(obj, escaped){
-  var buf = []
-    , terse = obj.terse;
+  var keys = Object.keys(obj);
 
-  delete obj.terse;
-  var keys = Object.keys(obj)
-    , len = keys.length;
-
-  if (len) {
-    buf.push('');
-    for (var i = 0; i < len; ++i) {
+  if (keys.length) {
+    for (var i = 0; i < keys.length; ++i) {
       var key = keys[i]
         , val = obj[key];
 
-      if ('boolean' == typeof val || null == val) {
-        if (val) {
-          terse
-            ? buf.push(key)
-            : buf.push(key + '="' + key + '"');
+      if ('class' == key) {
+        if (val = joinClasses(val)) {
+          buf.push(' ' + key + '="' + val + '"');
         }
-      } else if (0 == key.indexOf('data') && 'string' != typeof val) {
-        buf.push(key + "='" + JSON.stringify(val) + "'");
-      } else if ('class' == key && Array.isArray(val)) {
-        buf.push(key + '="' + jade.escape(val.join(' ')) + '"');
-      } else if (escaped && escaped[key]) {
-        buf.push(key + '="' + jade.escape(val) + '"');
       } else {
-        buf.push(key + '="' + val + '"');
+        buf.push(jade.attr(key, val, false, terse));
       }
     }
   }
 
-  return buf.join(' ');
+  return buf.join('');
 };
 
 /**
@@ -133,11 +182,13 @@ jade.attrs = function attrs(obj, escaped){
  */
 
 jade.escape = function escape(html){
-  return String(html)
-    .replace(/&(?!(\w+|\#\d+);)/g, '&amp;')
+  var result = String(html)
+    .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;');
+  if (result === '' + html) return html;
+  else return result;
 };
 
 /**
@@ -150,11 +201,18 @@ jade.escape = function escape(html){
  * @api private
  */
 
-jade.rethrow = function rethrow(err, filename, lineno){
-  if (!filename) throw err;
-
+jade.rethrow = function rethrow(err, filename, lineno, str){
+  if (!(err instanceof Error)) throw err;
+  if ((typeof window != 'undefined' || !filename) && !str) {
+    err.message += ' on line ' + lineno;
+    throw err;
+  }
+  try {
+    str = str || require('fs').readFileSync(filename, 'utf8')
+  } catch (ex) {
+    rethrow(err, null, lineno)
+  }
   var context = 3
-    , str = require('fs').readFileSync(filename, 'utf8')
     , lines = str.split('\n')
     , start = Math.max(lineno - context, 0)
     , end = Math.min(lines.length, lineno + context);
@@ -179,14 +237,12 @@ jade.rethrow = function rethrow(err, filename, lineno){
 var exports = exports || {};
 exports["Templates"] = exports["Templates"] || {};
 
-exports["Templates"]['basic'] = function anonymous(locals, attrs, escape, rethrow, merge) {
-attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+exports["Templates"]['basic'] = function template(locals) {
 var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<p>Basic template</p>');
-}
-return buf.join("");
+var jade_mixins = {};
+var jade_interp;
+
+buf.push("<p>Basic template</p>");;return buf.join("");
 };
   return exports["Templates"];
 });

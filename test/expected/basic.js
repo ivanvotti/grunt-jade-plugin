@@ -2,13 +2,11 @@
 this["MyApp"] = this["MyApp"] || {};
 this["MyApp"]["Templates"] = this["MyApp"]["Templates"] || {};
 
-this["MyApp"]["Templates"]['basic'] = function anonymous(locals, attrs, escape, rethrow, merge) {
-attrs = attrs || jade.attrs; escape = escape || jade.escape; rethrow = rethrow || jade.rethrow; merge = merge || jade.merge;
+this["MyApp"]["Templates"]['basic'] = function template(locals) {
 var buf = [];
-with (locals || {}) {
-var interp;
-buf.push('<p>Basic template</p>');
-}
-return buf.join("");
+var jade_mixins = {};
+var jade_interp;
+
+buf.push("<p>Basic template</p>");;return buf.join("");
 };
 }).call(this);
